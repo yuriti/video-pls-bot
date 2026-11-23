@@ -1,0 +1,11 @@
+[Unit]
+Description=Check Video Pls bot health every minute
+
+[Timer]
+OnBootSec=90s
+OnUnitActiveSec=60s
+AccuracySec=5s
+Unit=video-pls-health.service
+
+[Install]
+WantedBy=timers.target

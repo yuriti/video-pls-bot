@@ -1,0 +1,42 @@
+[Unit]
+Description=Dedicated Telegram Bot API for Video Pls bots
+After=network-online.target video-pls-api-route.service
+Requires=video-pls-api-route.service
+OnFailure=video-pls-health.service
+
+[Service]
+Type=simple
+User=video-pls-api
+Group=telegram-bot-api
+WorkingDirectory=/opt/video-pls-bot/current
+LoadCredentialEncrypted=telegram-api.env:/etc/video-pls-bot/telegram-api.env.cred
+ExecStart=/opt/video-pls-bot/venv/bin/python -m video_pls_bot.api_server
+ExecStartPost=/opt/video-pls-bot/venv/bin/python /opt/video-pls-bot/current/video_pls_bot/wait_endpoint.py ${TELEGRAM_API_PORT}
+Environment=PYTHONDONTWRITEBYTECODE=1
+# TELEGRAM_API_PORT (see .env.example)
+EnvironmentFile=/etc/video-pls-bot/video-pls-bot.env
+StateDirectory=video-pls-api
+StateDirectoryMode=0700
+CacheDirectory=video-pls-api
+CacheDirectoryMode=0700
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+UMask=0077
+MemoryMax=384M
+MemorySwapMax=0
+CPUQuota=40%
+TasksMax=64
+LimitCORE=0
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_NETLINK
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,19 @@
+[Unit]
+Description=Route only Video Pls Bot API traffic through the transparent inbound of the egress proxy
+Before=video-pls-api.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+# TELEGRAM_API_REDIRECT_PORT (see .env.example)
+EnvironmentFile=/etc/video-pls-bot/video-pls-bot.env
+ExecStart=/opt/video-pls-bot/current/deploy/video-pls-api-route.sh start
+ExecStop=/opt/video-pls-bot/current/deploy/video-pls-api-route.sh stop
+CapabilityBoundingSet=CAP_NET_ADMIN
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+RestrictAddressFamilies=AF_UNIX AF_NETLINK
+
+[Install]
+WantedBy=multi-user.target

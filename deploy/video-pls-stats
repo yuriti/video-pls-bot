@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd /opt/video-pls-bot/current
+exec /opt/video-pls-bot/venv/bin/python -m video_pls_bot.app --stats "$@"

@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "video-pls-bot"
+version = "0.1.0"
+description = "Shared download queue for multiple Telegram bots"
+requires-python = ">=3.11"
+dependencies = ["aiohttp==3.14.5", "yt-dlp[default]==2026.10.26", "curl-cffi==0.17.0"]
+
+[project.scripts]
+video-pls-bot = "video_pls_bot.app:main"
+
+[tool.setuptools.packages.find]
+include = ["video_pls_bot*"]

@@ -1,0 +1,30 @@
+[Unit]
+Description=Daily download digest for Video Pls bots
+After=network-online.target video-pls-api.service
+Wants=network-online.target video-pls-api.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=oneshot
+User=video-pls-bot
+Group=video-pls-bot
+WorkingDirectory=/opt/video-pls-bot/current
+ExecStart=/opt/video-pls-bot/venv/bin/python -m video_pls_bot.daily_reports
+LoadCredentialEncrypted=bot-tokens.json:/etc/video-pls-bot/bot-tokens.json.cred
+Environment=PYTHONDONTWRITEBYTECODE=1
+EnvironmentFile=/etc/video-pls-bot/video-pls-bot.env
+StateDirectory=video-pls-bot
+UMask=0077
+Restart=on-failure
+RestartSec=60s
+TimeoutStartSec=60s
+MemoryMax=100M
+CPUQuota=15%
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+IPAddressDeny=any
+IPAddressAllow=localhost

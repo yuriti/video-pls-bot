@@ -1,0 +1,52 @@
+[Unit]
+Description=Video downloader for all Video Pls Telegram bots
+After=network-online.target video-pls-api.service
+Wants=network-online.target video-pls-api.service
+OnFailure=video-pls-health.service
+
+[Service]
+Type=simple
+User=video-pls-bot
+Group=video-pls-bot
+SupplementaryGroups=telegram-bot-api
+WorkingDirectory=/opt/video-pls-bot/current
+ExecStart=/opt/video-pls-bot/venv/bin/python -m video_pls_bot.app
+LoadCredentialEncrypted=bot-tokens.json:/etc/video-pls-bot/bot-tokens.json.cred
+Environment=PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
+Environment=DATA_DIR=/var/lib/video-pls-bot TEMP_DIR=/var/cache/video-pls-bot
+Environment=TELEGRAM_LOCAL_FILES=1
+# DOWNLOAD_PROXY, TELEGRAM_API_BASE, ALERT_CHAT_ID, ALERT_BOT_ID, ... (see .env.example)
+EnvironmentFile=/etc/video-pls-bot/video-pls-bot.env
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=13h
+StateDirectory=video-pls-bot
+CacheDirectory=video-pls-bot
+CacheDirectoryMode=0711
+UMask=0077
+CPUQuota=80%
+MemoryHigh=600M
+MemoryMax=850M
+MemorySwapMax=0
+TasksMax=96
+Nice=10
+IOWeight=20
+LimitFSIZE=2100000000
+LimitCORE=0
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+IPAddressDeny=any
+IPAddressAllow=localhost
+LogRateLimitIntervalSec=30s
+LogRateLimitBurst=100
+
+[Install]
+WantedBy=multi-user.target

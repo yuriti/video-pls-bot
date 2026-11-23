@@ -1,0 +1,26 @@
+[Unit]
+Description=Independent health check and alert delivery for Video Pls bots
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=video-pls-bot
+Group=video-pls-bot
+WorkingDirectory=/opt/video-pls-bot/current
+ExecStart=/opt/video-pls-bot/venv/bin/python -m video_pls_bot.health
+LoadCredentialEncrypted=bot-tokens.json:/etc/video-pls-bot/bot-tokens.json.cred
+Environment=PYTHONDONTWRITEBYTECODE=1
+EnvironmentFile=/etc/video-pls-bot/video-pls-bot.env
+StateDirectory=video-pls-bot
+UMask=0077
+TimeoutStartSec=45
+MemoryMax=100M
+CPUQuota=15%
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+IPAddressDeny=any
+IPAddressAllow=localhost

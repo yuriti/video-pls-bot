@@ -1,0 +1,12 @@
+[Unit]
+Description=Send Video Pls download digest at 20:00 Moscow time
+
+[Timer]
+OnCalendar=*-*-* 20:00:00 Europe/Moscow
+AccuracySec=1s
+RandomizedDelaySec=0
+Persistent=true
+Unit=video-pls-daily.service
+
+[Install]
+WantedBy=timers.target
